@@ -1,0 +1,43 @@
+name: Runner Environment Diagnostics
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostics:
+    name: Diagnostics (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix: 
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.13'
+          cache: pip
+
+      - name: Collect the environment information
+        run: python collect_environment.py
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: environment-${{ matrix.os }}
+          path: reports/environment.json
+          if-no-files-found: error
+          retention-days: 7
+          
