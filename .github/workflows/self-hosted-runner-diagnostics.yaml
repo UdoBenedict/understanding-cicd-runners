@@ -9,7 +9,7 @@ permissions:
 jobs:
   self-hosted-diagnostics:
     name: Diagnostics (self-hosted Amazon Linux 2023)
-    runs-on: [self-hosted, linux, one]
+    runs-on: [self-hosted, linux, label-one]
 
     steps:
       - name: Checkout repository
