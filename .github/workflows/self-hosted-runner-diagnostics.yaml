@@ -1,0 +1,32 @@
+name: Runner Environment Diagnostics
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  self-hosted-diagnostics:
+    name: Diagnostics (self-hosted Amazon Linux 2023)
+    runs-on: [self-hosted, linux, one]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.1.0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Collect environment information
+        run: python scripts/collect_environment.py
+
+      - name: Upload environment report
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: environment-self-hosted-Amazon-Linux-2023
+          path: reports/environment.json
+          if-no-files-found: error
+          retention-days: 7
