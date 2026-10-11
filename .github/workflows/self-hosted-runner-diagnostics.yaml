@@ -15,8 +15,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6.1.0
 
-      - name: Collect environment information
-        run: python scripts/collect_environment.py
+      - name: Dynamically run with system Python 3.13
+        run: |
+          # 1. Locate the python3.13 binary safely on the system path
+          PYTHON_BIN=$(which python3.13 2>/dev/null || echo "/usr/bin/python3.13")
+          
+          # 2. Print the path for debugging visibility
+          echo "Using Python executable at: $PYTHON_BIN"
+          
+          # 3. Ensure core pip utilities are updated if dependencies are ever needed
+          $PYTHON_BIN -m pip install --upgrade pip --user
+          
+          # 4. Execute your collection script using the exact discovered path
+          $PYTHON_BIN scripts/collect_environment.py
 
       - name: Upload environment report
         uses: actions/upload-artifact@v7.0.2
