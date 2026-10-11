@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-python@v7.0.0
         with:
           python-version: "3.13"
+          update-environment: true
 
       - name: Collect environment information
         run: python scripts/collect_environment.py
